@@ -1,0 +1,56 @@
+.json-area {
+    position: relative;
+    box-sizing: border-box;
+    padding: 60px 40px;
+    height: 100%;
+    width: 100%;
+    background-color: white;
+
+    .edit-btn {
+        position: absolute;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        top: 0;
+        right: 0;
+        width: 30px;
+        height: 30px;
+        color: white;
+        font-size: 18px;
+        line-height: 30px;
+        text-align: center;
+        cursor: default;
+        opacity: 0.4;
+
+        &:hover {
+            opacity: 1;
+        }
+
+        &:not(.active) {
+            background-color: orangered;
+        }
+
+        &.active {
+            background-color: mediumseagreen;
+        }
+
+        &.error {
+            background-color: firebrick;
+        }
+    }
+
+    &__input,
+    &__output {
+        width: 100%;
+        height: 100%;
+        border: none;
+        padding: 0;
+        margin: 0;
+        outline: none;
+        resize: none;
+
+        &:not(.active) {
+            display: none;
+        }
+    }
+}
