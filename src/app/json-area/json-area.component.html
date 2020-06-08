@@ -1,7 +1,14 @@
-<div class="json-area js-json-area">
-  <div class="edit-btn js-edit-btn" title="Toggle edit mode">
+<div class="json-area" [class]="getMode()">
+  <div class="edit-btn" (click)="changeMode()" title="Toggle edit mode">
     <i class="fa fa-pencil fa-check"></i>
   </div>
-  <textarea spellcheck="false" class="json-area__input js-input" placeholder="Input your JSON here"></textarea>
-  <div class="json-area__output js-output"></div>
+  <textarea [(ngModel)]="json" spellcheck="false"
+            class="json-input" placeholder="Input your JSON here"
+    >
+  </textarea>
+  <h1></h1>
+<!--  </input>-->
+  <div class="json-output">
+    <app-json-view></app-json-view>
+  </div>
 </div>

@@ -3,14 +3,18 @@ import { NgModule } from '@angular/core';
 
 import { AppComponent } from './app.component';
 import { JsonAreaComponent } from './json-area/json-area.component';
+import {FormsModule} from "@angular/forms";
+import { JsonViewComponent } from './json-area/json-view/json-view.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    JsonAreaComponent
+    JsonAreaComponent,
+    JsonViewComponent
   ],
   imports: [
-    BrowserModule
+    BrowserModule,
+    FormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

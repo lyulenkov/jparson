@@ -25,22 +25,11 @@
         &:hover {
             opacity: 1;
         }
-
-        &:not(.active) {
-            background-color: orangered;
-        }
-
-        &.active {
-            background-color: mediumseagreen;
-        }
-
-        &.error {
-            background-color: firebrick;
-        }
     }
 
-    &__input,
-    &__output {
+    .json-input,
+    .json-output {
+        display: none;
         width: 100%;
         height: 100%;
         border: none;
@@ -48,9 +37,35 @@
         margin: 0;
         outline: none;
         resize: none;
+    }
 
-        &:not(.active) {
-            display: none;
+    &.edit-mode {
+        .edit-btn {
+            background: orangered;
+        }
+
+        .json-input {
+            display: block;
+        }
+    }
+
+    &.view-mode {
+        .edit-btn {
+            background: mediumseagreen;
+        }
+
+        .json-output {
+            display: block;
+        }
+    }
+
+    &.error {
+        .edit-btn {
+            background: firebrick;
+        }
+
+        .json-input {
+            display: block;
         }
     }
 }
