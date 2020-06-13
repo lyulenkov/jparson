@@ -1,31 +1,17 @@
 type JSONFilter = null;
 
-type PropCallback = (prop: string, object: object, parentProps: string[]) => void;
+type PropCallback = (prop: string, value: any, parentProps: string[]) => void;
 
 export class ObjectParser {
-    private filters: Array<JSONFilter>;
-    private readonly object: object;
-
-    private constructor(object: object) {
-        this.object = object;
-    }
-
-    static walk(object: object, callback: PropCallback, parentProps?) {
+    static walk(object: object, cb: PropCallback, parentProps?) {
         parentProps = parentProps || [];
+        console.log('obj: ', object);
         for (const prop in object) {
-            callback(prop, object[prop], parentProps);
-            if (typeof object[prop] === 'object' && object[prop] !instanceof Array) {
-                ObjectParser.walk(callback, object[prop], [...parentProps, prop]);
+            cb(prop, object[prop], parentProps);
+            if (typeof object[prop] === 'object' && !(object[prop] instanceof Array)) {
+                console.log('walk again');
+                this.walk(object[prop], cb, [...parentProps, prop]);
             }
         }
-    }
-
-    public static fromJSON(jsonString: string): ObjectParser {
-        try { return JSON.parse(jsonString); }
-        catch (e) { return null; }
-    }
-
-    public walk(callback: PropCallback) {
-        return ObjectParser.walk(this.object, callback);
     }
 }

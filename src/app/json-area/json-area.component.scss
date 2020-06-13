@@ -37,11 +37,12 @@
         margin: 0;
         outline: none;
         resize: none;
+        overflow: auto;
     }
 
     &.edit-mode {
         .edit-btn {
-            background: orangered;
+            background: mediumseagreen;
         }
 
         .json-input {
@@ -51,7 +52,7 @@
 
     &.view-mode {
         .edit-btn {
-            background: mediumseagreen;
+            background: orangered;
         }
 
         .json-output {
