@@ -1,6 +1,6 @@
-<div class="json-area" [class]="getMode().mainClass">
-  <div class="edit-btn" (click)="changeMode()" title="Toggle edit mode">
-    <i class="fa" [class]="getMode().editBtnIconClass"></i>
+<div class="json-area" [class]="getMode()">
+  <div class="top-panel">
+    <div class="btn fa fa-eye" [ngClass]="{'active': isViewMode()}" (click)="changeMode()" title="Toggle edit mode"></div>
   </div>
   <textarea [(ngModel)]="json" spellcheck="false"
             class="json-input" placeholder="Input your JSON here"

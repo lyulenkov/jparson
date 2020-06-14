@@ -2,21 +2,12 @@ import {Component, Input, OnInit} from '@angular/core';
 import {JsonParser, ParsedJsonLine} from "../../logic/JsonParser";
 
 
-type JsonAreaMode = {
-  mainClass: string,
-  editBtnIconClass: string
-};
 
-const AreaModes: {[key: string]: JsonAreaMode} = {
-  EDIT: {
-    mainClass: 'edit-mode',
-    editBtnIconClass: 'fa-check',
-  },
-  VIEW : {
-    mainClass: 'view-mode',
-    editBtnIconClass: 'fa-pencil'
-  }
-} as const;
+enum AreaModes {
+  EDIT = 'edit-mode',
+  VIEW = 'view-mode'
+}
+
 
 @Component({
   selector: 'app-json-area',
@@ -82,7 +73,6 @@ export class JsonAreaComponent implements OnInit {
   parseJson(): boolean {
     try {
       this.parsedJson = JsonParser.parse(this.json);
-      console.log(this.parsedJson);
     } catch (e) {
       console.error(e);
       return false;
@@ -92,6 +82,10 @@ export class JsonAreaComponent implements OnInit {
 
   getMode() {
     return this.mode;
+  }
+
+  isViewMode() {
+    return this.mode == AreaModes.VIEW;
   }
 
   ngOnInit(): void {
