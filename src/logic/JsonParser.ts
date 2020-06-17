@@ -92,7 +92,7 @@ export type ParsedJsonLine = {
     type?: string,
     postfix?: string,
     nestingLevel: number,
-    isHidden?: boolean
+    rejectedByFilters?: Set<string>
 };
 
 enum JsonTypes {

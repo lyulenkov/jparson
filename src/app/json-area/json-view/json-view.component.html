@@ -1,0 +1,9 @@
+<div [ngClass]="getFilterClassList()">
+    <div *ngFor="let line of parsedJson" class="line" [class]="'level-' + line.nestingLevel">
+        <span class="prop" *ngIf="line.prop">{{line.prop}}</span>
+        <span *ngIf="line.prop">:</span>
+        <span class="type" [class]="line.type" *ngIf="line.type">{{line.type}}</span>
+        <span class="value" [class]="line.type" *ngIf="line.value">{{line.value}}</span>
+        <span class="postfix" *ngIf="line.postfix">{{line.postfix}}</span>
+    </div>
+</div>
