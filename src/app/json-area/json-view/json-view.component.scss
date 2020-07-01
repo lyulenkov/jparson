@@ -4,6 +4,8 @@ $lineVerticalPadding: 5px;
 
 .level {
     padding-left: $tabWidth;
+    margin-left: 2px;
+    border-left: 1px solid transparent;
 }
 
 .line {
@@ -22,19 +24,8 @@ $lineVerticalPadding: 5px;
         margin-left: 0;
     }
 
-    &:nth-child(odd) {
+    &.odd {
         background: #fafafa;
-    }
-
-    &.folding {
-        &:hover {
-            & ~ .line {
-                opacity: 0.4;
-            }
-            & ~ .folding ~ .line {
-                opacity: 1;
-            }
-        }
     }
 
     .prop {
@@ -58,6 +49,33 @@ $lineVerticalPadding: 5px;
 
         &.null {
             color: gray;
+        }
+    }
+
+    .value-hint {
+        display: none;
+    }
+
+    &.folding {
+        cursor: pointer;
+
+        &:hover {
+            & + .level {
+                border-color: #e0e0e0;
+            }
+        }
+    }
+
+    &.folded {
+        .postfix {
+            display: none;
+        }
+        .value-hint {
+            display: inline;
+        }
+
+        & + .level {
+            display: none;
         }
     }
 }

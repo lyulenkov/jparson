@@ -7,53 +7,63 @@ export class JsonParser {
      */
     static parse(json: string): ParsedJSONNode {
         let value = JSON.parse(json);
+        let lineCounter = {value: 0};
         if (value && typeof value === JsonTypes.OBJECT) {
             if (value instanceof Array) {
-                return this.parseArray(value);
+                return this.parseArray(value, lineCounter);
             }
-            return this.parseObject(value);
+            return this.parseObject(value, lineCounter);
         }
-        return this.parsePrimitive(value);
+        return this.parsePrimitive(value, lineCounter);
     }
 
-    static parseObject(object: object, prop?: string): ParsedJSONNode {
+    static parseObject(object: object, lineCounter: LineCounter, prop?: string): ParsedJSONNode {
         let node = new ParsedJSONNode({
             prop,
             type: JsonTypes.OBJECT,
-            postfix: BraceChar.CURLY_OPENING
+            postfix: BraceChar.CURLY_OPENING,
+            valueHint: '{...}',
+            number: ++lineCounter.value
         });
         ObjectParser.walk(object,(prop, value, parentProps) => {
             if (value instanceof Array) {
-                node.children.push(this.parseArray(value, prop));
+                node.children.push(this.parseArray(value, lineCounter, prop));
             } else {
-                node.children.push(this.parsePrimitive(value, prop));
+                node.children.push(this.parsePrimitive(value, lineCounter, prop));
             }
         });
         node.closingLine = new ParsedJSONNode({
-            postfix: BraceChar.CURLY_CLOSING
+            postfix: BraceChar.CURLY_CLOSING,
+            number: ++lineCounter.value,
+            isClosingLine: true
         });
         return node;
     }
 
-    static parseArray(array: any[], prop?: string): ParsedJSONNode {
+    static parseArray(array: any[], lineCounter: LineCounter, prop?: string): ParsedJSONNode {
         let node = new ParsedJSONNode({
             prop: this.normalizePropName(prop),
-            postfix: BraceChar.SQUARE_OPENING
+            type: JsonTypes.ARRAY,
+            postfix: BraceChar.SQUARE_OPENING,
+            valueHint: '[...]',
+            number: ++lineCounter.value
         });
         array.forEach(value => {
             if (typeof value == JsonTypes.OBJECT) {
-                node.children.push(this.parseObject(value));
+                node.children.push(this.parseObject(value, lineCounter));
                 return;
             }
-            node.children.push(this.parsePrimitive(value));
+            node.children.push(this.parsePrimitive(value, lineCounter));
         });
         node.closingLine = new ParsedJSONNode({
-            postfix: BraceChar.SQUARE_CLOSING
+            postfix: BraceChar.SQUARE_CLOSING,
+            number: ++lineCounter.value,
+            isClosingLine: true
         });
         return node;
     }
 
-    static parsePrimitive(value: any, prop?: string): ParsedJSONNode {
+    static parsePrimitive(value: any, lineCounter: LineCounter, prop?: string): ParsedJSONNode {
         let type: string = typeof value;
         if (type == JsonTypes.STRING) {
             value = `"${value}"`;
@@ -67,7 +77,8 @@ export class JsonParser {
         return new ParsedJSONNode({
             prop: this.normalizePropName(prop),
             value: value,
-            type: type
+            type: type,
+            number: ++lineCounter.value
         });
     }
 
@@ -84,11 +95,15 @@ type ParsedJSONLine = {
     value?: string,
     type?: string,
     postfix?: string,
+    isClosingLine?: boolean,
+    valueHint?: string,
+    number: number,
     rejectedByFilters?: Set<string>
 };
 
 export class ParsedJSONNode {
     children: ParsedJSONNode[] = [];
+    isFolded = false;
     private _closingLine: ParsedJSONNode;
 
     constructor(readonly value: ParsedJSONLine) {}
@@ -105,16 +120,31 @@ export class ParsedJSONNode {
         return this._closingLine;
     }
 
+    isParentLine() {
+        return this.children.length || this.value.isClosingLine;
+    }
+
+    isOdd() {
+        return this.value.number % 2 != 0;
+    }
+
     isFilteredOut() {
         return this.value.rejectedByFilters?.size;
     }
+
+    toggleFolded() {
+        this.isFolded = !this.isFolded;
+    }
 }
+
+type LineCounter = {value: number};
 
 enum JsonTypes {
     BOOLEAN = 'boolean',
     NUMBER = 'number',
     STRING = 'string',
     OBJECT = 'object',
+    ARRAY = 'array',
     NULL = 'null'
 }
 

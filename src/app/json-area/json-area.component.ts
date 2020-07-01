@@ -17,7 +17,7 @@ enum AreaModes {
 export class JsonAreaComponent implements OnInit {
   private mode = AreaModes.EDIT;
   @Input() json = '';
-  parsedJson = new ParsedJSONNode({value: null}); // TODO: replace with undefined and add ngIf to view component
+  parsedJson = new ParsedJSONNode({value: null, number: 0}); // TODO: replace with undefined and add ngIf to view component
 
   constructor() {
     // TODO: remove testing data

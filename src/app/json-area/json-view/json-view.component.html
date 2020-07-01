@@ -1,10 +1,11 @@
 <ng-template #lineTemplate let-node="node">
-    <div class="line">
+    <div class="line" [ngClass]="{odd: node.isOdd(), folding: node.isParentLine(), folded: node.isFolded}" (click)="node.toggleFolded()">
         <span class="prop" *ngIf="node.value.prop">{{node.value.prop}}</span>
         <span *ngIf="node.value.prop">:</span>
-        <span class="type" [class]="node.value.type" *ngIf="node.value.type">{{node.value.type}}</span>
+        <span class="type" [class]="node.value.type" *ngIf="!node.isParentLine()">{{node.value.type}}</span>
         <span class="value" [class]="node.value.type" *ngIf="node.value.value">{{node.value.value}}</span>
         <span class="postfix" *ngIf="node.value.postfix">{{node.value.postfix}}</span>
+        <span class="value-hint">{{node.value.valueHint}}</span>
     </div>
 </ng-template>
 
@@ -18,7 +19,7 @@
             </ng-template>
         </ng-template>
     </div>
-    <ng-container *ngIf="node.closingLine">
+    <ng-container *ngIf="node.closingLine && !node.isFolded">
         <ng-container *ngTemplateOutlet="lineTemplate; context: { node: node.closingLine }"></ng-container>
     </ng-container>
 </ng-template>
