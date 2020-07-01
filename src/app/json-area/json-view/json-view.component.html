@@ -1,9 +1,28 @@
-<div [ngClass]="getFilterClassList()">
-    <div *ngFor="let line of parsedJson" class="line" [class]="'level-' + line.nestingLevel">
-        <span class="prop" *ngIf="line.prop">{{line.prop}}</span>
-        <span *ngIf="line.prop">:</span>
-        <span class="type" [class]="line.type" *ngIf="line.type">{{line.type}}</span>
-        <span class="value" [class]="line.type" *ngIf="line.value">{{line.value}}</span>
-        <span class="postfix" *ngIf="line.postfix">{{line.postfix}}</span>
+<ng-template #lineTemplate let-node="node">
+    <div class="line">
+        <span class="prop" *ngIf="node.value.prop">{{node.value.prop}}</span>
+        <span *ngIf="node.value.prop">:</span>
+        <span class="type" [class]="node.value.type" *ngIf="node.value.type">{{node.value.type}}</span>
+        <span class="value" [class]="node.value.type" *ngIf="node.value.value">{{node.value.value}}</span>
+        <span class="postfix" *ngIf="node.value.postfix">{{node.value.postfix}}</span>
     </div>
+</ng-template>
+
+<ng-template #nodeTemplate let-node="node">
+    <ng-container *ngTemplateOutlet="lineTemplate; context: { node: node }"></ng-container>
+    <div *ngIf="node.hasChildren()" class="level">
+        <ng-template ngFor let-child [ngForOf]="node.children">
+            <ng-template
+                    [ngTemplateOutlet]="nodeTemplate"
+                    [ngTemplateOutletContext]="{ node: child }">
+            </ng-template>
+        </ng-template>
+    </div>
+    <ng-container *ngIf="node.closingLine">
+        <ng-container *ngTemplateOutlet="lineTemplate; context: { node: node.closingLine }"></ng-container>
+    </ng-container>
+</ng-template>
+
+<div [ngClass]="getFilterClassList()">
+    <ng-container *ngTemplateOutlet="nodeTemplate; context: { node: parsedJson }"></ng-container>
 </div>

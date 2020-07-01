@@ -7,7 +7,7 @@ import {FormsModule} from "@angular/forms";
 import { JsonViewComponent } from './json-area/json-view/json-view.component';
 import { ToolsPanelComponent } from './tools-panel/tools-panel.component';
 import { SwitchComponent } from './ui/switch/switch.component';
-import { FlagFilterComponent } from './tools-panel/flag-filter/flag-filter.component';
+import { StaticFilterComponent } from './tools-panel/static-filter/static-filter.component';
 
 @NgModule({
   declarations: [
@@ -16,7 +16,7 @@ import { FlagFilterComponent } from './tools-panel/flag-filter/flag-filter.compo
     JsonViewComponent,
     ToolsPanelComponent,
     SwitchComponent,
-    FlagFilterComponent
+    StaticFilterComponent
   ],
   imports: [
     BrowserModule,

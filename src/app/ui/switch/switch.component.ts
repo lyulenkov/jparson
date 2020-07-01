@@ -1,7 +1,7 @@
 import {Component, EventEmitter, OnInit, Output} from '@angular/core';
 
 @Component({
-  selector: 'app-switch',
+  selector: 'switch',
   templateUrl: './switch.component.html',
   styleUrls: ['./switch.component.scss']
 })

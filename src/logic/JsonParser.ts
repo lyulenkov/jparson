@@ -5,77 +5,70 @@ export class JsonParser {
     /**
      * @throws Error
      */
-    static parse(json: string): ParsedJsonLine[] {
+    static parse(json: string): ParsedJSONNode {
         let value = JSON.parse(json);
         if (value && typeof value === JsonTypes.OBJECT) {
             if (value instanceof Array) {
-                return this.parseArray(value, 0);
+                return this.parseArray(value);
             }
-            return this.parseObject(value, 0);
+            return this.parseObject(value);
         }
-        return [this.parsePrimitive(value, 0)];
+        return this.parsePrimitive(value);
     }
 
-    static parseObject(object: object, nestingLevel: number): ParsedJsonLine[] {
-        let lines: ParsedJsonLine[] = [];
-        lines.push({
-            postfix: StandardSymbols.CURLY_BRACE_OPENING,
-            nestingLevel
+    static parseObject(object: object, prop?: string): ParsedJSONNode {
+        let node = new ParsedJSONNode({
+            prop,
+            type: JsonTypes.OBJECT,
+            postfix: BraceChar.CURLY_OPENING
         });
-        nestingLevel++;
         ObjectParser.walk(object,(prop, value, parentProps) => {
             if (value instanceof Array) {
-                lines.push(...this.parseArray(value, nestingLevel, prop));
+                node.children.push(this.parseArray(value, prop));
             } else {
-                lines.push(this.parsePrimitive(value, nestingLevel + parentProps.length, prop));
+                node.children.push(this.parsePrimitive(value, prop));
             }
         });
-        lines.push({
-            postfix: StandardSymbols.CURLY_BRACE_CLOSING,
-            nestingLevel: nestingLevel - 1
+        node.closingLine = new ParsedJSONNode({
+            postfix: BraceChar.CURLY_CLOSING
         });
-        return lines;
+        return node;
     }
 
-    static parseArray(array: any[], nestingLevel: number, prop?: string): ParsedJsonLine[] {
-        let lines: ParsedJsonLine[] = [];
-        lines.push({
+    static parseArray(array: any[], prop?: string): ParsedJSONNode {
+        let node = new ParsedJSONNode({
             prop: this.normalizePropName(prop),
-            postfix: StandardSymbols.SQUARE_BRACKET_OPENING,
-            nestingLevel
+            postfix: BraceChar.SQUARE_OPENING
         });
-        nestingLevel++;
         array.forEach(value => {
             if (typeof value == JsonTypes.OBJECT) {
-                lines.push(...this.parseObject(value, nestingLevel));
+                node.children.push(this.parseObject(value));
                 return;
             }
-            lines.push(this.parsePrimitive(value, nestingLevel));
+            node.children.push(this.parsePrimitive(value));
         });
-        lines.push({
-            postfix: StandardSymbols.SQUARE_BRACKET_CLOSING,
-            nestingLevel: nestingLevel - 1
+        node.closingLine = new ParsedJSONNode({
+            postfix: BraceChar.SQUARE_CLOSING
         });
-        return lines;
+        return node;
     }
 
-    static parsePrimitive(value: any, nestingLevel: number, prop?: string): ParsedJsonLine {
+    static parsePrimitive(value: any, prop?: string): ParsedJSONNode {
         let type: string = typeof value;
         if (type == JsonTypes.STRING) {
             value = `"${value}"`;
         }
-        if (value === null) {
+        if (value == null) {
             value = 'null';
             type = JsonTypes.NULL;
         } else {
             value = '' + value;
         }
-        return {
+        return new ParsedJSONNode({
             prop: this.normalizePropName(prop),
             value: value,
-            type: type,
-            nestingLevel
-        };
+            type: type
+        });
     }
 
     static normalizePropName(prop: string): string {
@@ -86,14 +79,36 @@ export class JsonParser {
     }
 }
 
-export type ParsedJsonLine = {
+type ParsedJSONLine = {
     prop?: string,
     value?: string,
     type?: string,
     postfix?: string,
-    nestingLevel: number,
     rejectedByFilters?: Set<string>
 };
+
+export class ParsedJSONNode {
+    children: ParsedJSONNode[] = [];
+    private _closingLine: ParsedJSONNode;
+
+    constructor(readonly value: ParsedJSONLine) {}
+
+    hasChildren() {
+        return this.children.length;
+    }
+
+    set closingLine(line: ParsedJSONNode) {
+        this._closingLine = line;
+    }
+
+    get closingLine() {
+        return this._closingLine;
+    }
+
+    isFilteredOut() {
+        return this.value.rejectedByFilters?.size;
+    }
+}
 
 enum JsonTypes {
     BOOLEAN = 'boolean',
@@ -103,9 +118,9 @@ enum JsonTypes {
     NULL = 'null'
 }
 
-enum StandardSymbols {
-    CURLY_BRACE_OPENING = '{',
-    CURLY_BRACE_CLOSING = '}',
-    SQUARE_BRACKET_OPENING = '[',
-    SQUARE_BRACKET_CLOSING = ']'
+enum BraceChar {
+    CURLY_OPENING = '{',
+    CURLY_CLOSING = '}',
+    SQUARE_OPENING = '[',
+    SQUARE_CLOSING = ']',
 }

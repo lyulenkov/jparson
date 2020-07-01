@@ -1,5 +1,3 @@
-type JSONFilter = null;
-
 type PropCallback = (prop: string, value: any, parentProps: string[]) => void;
 
 export class ObjectParser {

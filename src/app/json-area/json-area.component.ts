@@ -1,5 +1,5 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {JsonParser, ParsedJsonLine} from "../../logic/JsonParser";
+import {JsonParser, ParsedJSONNode} from "../../logic/JsonParser";
 
 
 
@@ -10,14 +10,14 @@ enum AreaModes {
 
 
 @Component({
-  selector: 'app-json-area',
+  selector: 'json-area',
   templateUrl: './json-area.component.html',
   styleUrls: ['./json-area.component.scss']
 })
 export class JsonAreaComponent implements OnInit {
   private mode = AreaModes.EDIT;
   @Input() json = '';
-  parsedJson: ParsedJsonLine[] = null;
+  parsedJson = new ParsedJSONNode({value: null}); // TODO: replace with undefined and add ngIf to view component
 
   constructor() {
     // TODO: remove testing data

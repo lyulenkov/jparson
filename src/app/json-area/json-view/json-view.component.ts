@@ -1,14 +1,14 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {ParsedJsonLine} from "../../../logic/JsonParser";
 import {FiltersService, StaticFilterName} from "../../../services/FiltersService";
+import {ParsedJSONNode} from "../../../logic/JsonParser";
 
 @Component({
-  selector: 'app-json-view',
+  selector: 'json-view',
   templateUrl: './json-view.component.html',
   styleUrls: ['./json-view.component.scss'],
 })
 export class JsonViewComponent implements OnInit {
-  @Input('json') parsedJson: ParsedJsonLine[];
+  @Input('json') parsedJson: ParsedJSONNode;
   private filterClassNamesSet: Set<string> = new Set();
 
   constructor(private filtersService: FiltersService) {
@@ -22,13 +22,6 @@ export class JsonViewComponent implements OnInit {
   }
 
   applySearchFilter(pattern: string) {
-    this.parsedJson.forEach(line => {
-      if (!line.value) return;
-      if (!line.rejectedByFilters) {
-        line.rejectedByFilters = new Set();
-      }
-      
-    })
   }
 
   getFilterClassList() {
@@ -37,10 +30,4 @@ export class JsonViewComponent implements OnInit {
 
   ngOnInit(): void {
   }
-
 }
-
-type JsonViewFilter = {
-  class?: string,
-  value : string | boolean,
-};

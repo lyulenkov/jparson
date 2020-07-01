@@ -2,12 +2,12 @@ import {Component, Input, OnInit} from '@angular/core';
 import {FiltersService} from "../../../services/FiltersService";
 
 @Component({
-  selector: 'app-flag-filter',
-  templateUrl: './flag-filter.component.html',
-  styleUrls: ['./flag-filter.component.scss'],
+  selector: 'static-filter',
+  templateUrl: './static-filter.component.html',
+  styleUrls: ['./static-filter.component.scss'],
 })
-export class FlagFilterComponent implements OnInit {
-  @Input() readonly title;
+export class StaticFilterComponent implements OnInit {
+  @Input() readonly label;
   @Input() readonly name;
 
   constructor(private filtersService: FiltersService) {  }

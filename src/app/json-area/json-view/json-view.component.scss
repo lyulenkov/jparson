@@ -2,7 +2,12 @@ $tabWidth: 30px;
 $spaceBetweenLineComponents: 6px;
 $lineVerticalPadding: 5px;
 
+.level {
+    padding-left: $tabWidth;
+}
+
 .line {
+    position: relative;
     padding: $lineVerticalPadding 0;
     font-size: 13px;
     line-height: normal;
@@ -13,13 +18,22 @@ $lineVerticalPadding: 5px;
         margin: 0 $spaceBetweenLineComponents;
     }
 
+    & > *:first-child {
+        margin-left: 0;
+    }
+
     &:nth-child(odd) {
         background: #fafafa;
     }
 
-    @for $i from 1 through 30 {
-        &.level-#{$i} {
-            padding-left: $tabWidth * $i;
+    &.folding {
+        &:hover {
+            & ~ .line {
+                opacity: 0.4;
+            }
+            & ~ .folding ~ .line {
+                opacity: 1;
+            }
         }
     }
 

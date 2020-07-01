@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import {StaticFilterName} from "../../services/FiltersService";
 
 @Component({
-  selector: 'app-tools-panel',
+  selector: 'tools-panel',
   templateUrl: './tools-panel.component.html',
   styleUrls: ['./tools-panel.component.scss']
 })
