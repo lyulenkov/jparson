@@ -1,12 +1,14 @@
-<header></header>
+<div [ngClass]="['body-wrap', theme]">
+  <header></header>
 
-<main class="layout">
-  <section class="column">
-    <json-area></json-area>
-  </section>
-  <section class="column small">
-    <tools-panel></tools-panel>
-  </section>
-</main>
+  <main class="layout">
+    <section class="column">
+      <json-area></json-area>
+    </section>
+    <section class="column small">
+      <tools-panel></tools-panel>
+    </section>
+  </main>
 
-<footer></footer>
+  <footer></footer>
+</div>

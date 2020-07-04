@@ -1,0 +1,35 @@
+@mixin custom-webkit-scrollbar {
+    &::-webkit-scrollbar {
+        width: 5px;
+        height: 5px;
+    }
+    &::-webkit-scrollbar-button {
+        width: 0;
+        height: 0;
+    }
+    &::-webkit-scrollbar-thumb {
+        background: var(--color-scrollbar-thumb);
+        border: 0 none #ffffff;
+        border-radius: 0;
+    }
+    &::-webkit-scrollbar-thumb:hover {
+        background: var(--color-scrollbar-thumb);
+    }
+    &::-webkit-scrollbar-thumb:active {
+        background: var(--color-ui-active);
+    }
+    &::-webkit-scrollbar-track {
+        background: transparent;
+        border: 0 none #ffffff;
+        border-radius: 0;
+    }
+    &::-webkit-scrollbar-track:hover {
+        background: transparent;
+    }
+    &::-webkit-scrollbar-track:active {
+        background: transparent;
+    }
+    &::-webkit-scrollbar-corner {
+        background: transparent;
+    }
+}

@@ -7,8 +7,8 @@ $switch-height: 16px;
     border-radius: 2px;
     overflow: hidden;
     cursor: pointer;
-    background: #ddd;
-    border: 1px solid #ddd;
+    background: var(--color-ui-inactive);
+    border: 1px solid var(--color-ui-inactive);
     transition: background 0.2s, border-color 0.2s;
 
     .track {
@@ -24,8 +24,8 @@ $switch-height: 16px;
     }
 
     &.active {
-        background: cornflowerblue;
-        border-color: cornflowerblue;
+        background: var(--color-ui-active);
+        border-color: var(--color-ui-active);
 
         .track {
             left: calc(100% - #{$switch-height});

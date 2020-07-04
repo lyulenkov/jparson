@@ -1,5 +1,5 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {JsonParser, ParsedJSONNode} from "../../logic/JsonParser";
+import {JsonParser, ParsedJSONNode} from "../../ts/logic/JsonParser";
 
 
 

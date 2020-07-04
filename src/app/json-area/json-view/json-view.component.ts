@@ -1,6 +1,6 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {FiltersService, StaticFilterName} from "../../../services/FiltersService";
-import {ParsedJSONNode} from "../../../logic/JsonParser";
+import {ParsedJSONNode} from "../../../ts/logic/JsonParser";
 
 @Component({
   selector: 'json-view',

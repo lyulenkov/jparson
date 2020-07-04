@@ -1,6 +1,21 @@
+.body-wrap {
+  box-sizing: border-box;
+  width: 100%;
+  padding: 0 10px;
+  background: var(--color-body-bg);
+  color: var(--color-body-default-text);
+}
+
+header {
+  height: 40px;
+}
+
+footer {
+  height: 20px;
+}
+
 .layout {
   display: flex;
-  margin: 40px 10px 20px;
   height: calc(100vh - 60px);
 }
 
@@ -9,7 +24,7 @@
   width: 100%;
   max-width: 1000px;
   height: 100%;
-  background: white;
+  background: var(--color-layout-block-bg);
   border-radius: 2px;
   overflow: hidden;
   box-shadow: 0 5px 10px rgba(0,0,0,0.08);

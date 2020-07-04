@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import {StyleThemes} from "../ts/types/types";
 
 @Component({
   selector: 'root',
@@ -7,4 +8,5 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'json-ripper';
+  theme = StyleThemes.CLASSIC;
 }

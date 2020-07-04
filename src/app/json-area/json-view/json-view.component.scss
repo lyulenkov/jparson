@@ -15,6 +15,7 @@ $lineVerticalPadding: 5px;
     line-height: normal;
     font-family: monospace;
     white-space: nowrap;
+    color: var(--color-json-default);
 
     & > * {
         margin: 0 $spaceBetweenLineComponents;
@@ -25,11 +26,11 @@ $lineVerticalPadding: 5px;
     }
 
     &.odd {
-        background: #fafafa;
+        background: var(--color-json-odd-line-bg);
     }
 
     .prop {
-        color: purple;
+        color: var(--color-json-prop);
     }
 
     .type {
@@ -40,15 +41,15 @@ $lineVerticalPadding: 5px;
     .value {
         &.number,
         &.boolean {
-            color: blue;
+            color: var(--color-json-number);
         }
 
         &.string {
-            color: firebrick;
+            color: var(--color-json-string);
         }
 
         &.null {
-            color: gray;
+            color: var(--color-json-null);
         }
     }
 
