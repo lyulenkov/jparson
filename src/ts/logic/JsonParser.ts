@@ -32,11 +32,10 @@ export class JsonParser {
                 node.children.push(this.parsePrimitive(value, lineCounter, prop));
             }
         });
-        node.closingLine = new ParsedJSONNode({
+        node.setClosingLineNode(new ParsedJSONNode({
             postfix: BraceChar.CURLY_CLOSING,
-            number: ++lineCounter.value,
-            isClosingLine: true
-        });
+            number: ++lineCounter.value
+        }));
         return node;
     }
 
@@ -55,11 +54,10 @@ export class JsonParser {
             }
             node.children.push(this.parsePrimitive(value, lineCounter));
         });
-        node.closingLine = new ParsedJSONNode({
+        node.setClosingLineNode(new ParsedJSONNode({
             postfix: BraceChar.SQUARE_CLOSING,
-            number: ++lineCounter.value,
-            isClosingLine: true
-        });
+            number: ++lineCounter.value
+        }));
         return node;
     }
 
@@ -104,7 +102,9 @@ type ParsedJSONLine = {
 export class ParsedJSONNode {
     children: ParsedJSONNode[] = [];
     isFolded = false;
-    private _closingLine: ParsedJSONNode;
+    private _isHovered = false;
+    private closingLine: ParsedJSONNode;
+    private correspondingOpeningLineNode: ParsedJSONNode;
 
     constructor(readonly value: ParsedJSONLine) {}
 
@@ -112,20 +112,42 @@ export class ParsedJSONNode {
         return this.children.length;
     }
 
-    set closingLine(line: ParsedJSONNode) {
-        this._closingLine = line;
+    setClosingLineNode(line: ParsedJSONNode) {
+        // line.parentNode = this;
+        line.setCorrespondingOpeningLineNode(this);
+        this.closingLine = line;
     }
 
-    get closingLine() {
-        return this._closingLine;
+    private setCorrespondingOpeningLineNode(node: ParsedJSONNode) {
+        this.correspondingOpeningLineNode = node;
     }
 
-    isParentLine() {
-        return this.children.length || this.value.isClosingLine;
+    getCorrespondingOpeningLineNode() {
+        return this.correspondingOpeningLineNode;
     }
 
-    isOdd() {
-        return this.value.number % 2 != 0;
+    setHover() {
+        this._isHovered = true;
+    }
+
+    removeHover() {
+        this._isHovered = false;
+    }
+
+    isHovered() {
+        return this._isHovered;
+    }
+
+    getClosingLineNode() {
+        return this.closingLine;
+    }
+
+    isClosingLine() {
+        return !!this.correspondingOpeningLineNode;
+    }
+
+    isFoldingLine() {
+        return this.hasChildren() || this.isClosingLine();
     }
 
     isFilteredOut() {
@@ -133,7 +155,11 @@ export class ParsedJSONNode {
     }
 
     toggleFolded() {
-        this.isFolded = !this.isFolded;
+        if (this.isClosingLine()) {
+            this.correspondingOpeningLineNode.toggleFolded();
+        } else {
+            this.isFolded = !this.isFolded;
+        }
     }
 }
 

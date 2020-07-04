@@ -1,8 +1,12 @@
 <ng-template #lineTemplate let-node="node">
-    <div class="line" [ngClass]="{odd: node.isOdd(), folding: node.isParentLine(), folded: node.isFolded}" (click)="node.toggleFolded()">
+    <div class="line" [ngClass]="{folding: node.isFoldingLine(), folded: node.isFolded, hover: node.isHovered()}"
+         (click)="node.toggleFolded()"  
+         (mouseover)="onLineMouseover(node)"
+         (mouseout)="onLineMouseout(node)"
+        >
         <span class="prop" *ngIf="node.value.prop">{{node.value.prop}}</span>
         <span *ngIf="node.value.prop">:</span>
-        <span class="type" [class]="node.value.type" *ngIf="!node.isParentLine()">{{node.value.type}}</span>
+        <span class="type" [class]="node.value.type" *ngIf="!node.isFoldingLine()">{{node.value.type}}</span>
         <span class="value" [class]="node.value.type" *ngIf="node.value.value">{{node.value.value}}</span>
         <span class="postfix" *ngIf="node.value.postfix">{{node.value.postfix}}</span>
         <span class="value-hint">{{node.value.valueHint}}</span>
@@ -19,11 +23,11 @@
             </ng-template>
         </ng-template>
     </div>
-    <ng-container *ngIf="node.closingLine && !node.isFolded">
-        <ng-container *ngTemplateOutlet="lineTemplate; context: { node: node.closingLine }"></ng-container>
+    <ng-container *ngIf="node.hasChildren() && !node.isFolded">
+        <ng-container *ngTemplateOutlet="lineTemplate; context: { node: node.getClosingLineNode() }"></ng-container>
     </ng-container>
 </ng-template>
 
-<div [ngClass]="getFilterClassList()">
+<div [ngClass]="getClassList()">
     <ng-container *ngTemplateOutlet="nodeTemplate; context: { node: parsedJson }"></ng-container>
 </div>

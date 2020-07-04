@@ -1,6 +1,16 @@
 $tabWidth: 30px;
 $spaceBetweenLineComponents: 6px;
-$lineVerticalPadding: 5px;
+$lineHeight: 25px;
+
+.json-view {
+    background-image: repeating-linear-gradient(
+                    var(--color-json-odd-line-bg) 0px,
+                    var(--color-json-odd-line-bg) $lineHeight,
+                    transparent $lineHeight,
+                    transparent $lineHeight * 2
+    );
+    background-attachment: scroll;
+}
 
 .level {
     padding-left: $tabWidth;
@@ -10,9 +20,9 @@ $lineVerticalPadding: 5px;
 
 .line {
     position: relative;
-    padding: $lineVerticalPadding 0;
     font-size: 13px;
-    line-height: normal;
+    height: $lineHeight;
+    line-height: $lineHeight;
     font-family: monospace;
     white-space: nowrap;
     color: var(--color-json-default);
@@ -23,10 +33,6 @@ $lineVerticalPadding: 5px;
 
     & > *:first-child {
         margin-left: 0;
-    }
-
-    &.odd {
-        background: var(--color-json-odd-line-bg);
     }
 
     .prop {
@@ -60,10 +66,12 @@ $lineVerticalPadding: 5px;
     &.folding {
         cursor: pointer;
 
-        &:hover {
+        &.hover {
             & + .level {
                 border-color: #e0e0e0;
             }
+
+            font-weight: bolder;
         }
     }
 
