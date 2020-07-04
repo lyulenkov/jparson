@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "json-ripper": {
+    "jparson": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -17,7 +17,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/json-ripper",
+            "outputPath": "dist/jparson",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
@@ -66,18 +66,18 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "json-ripper:build"
+            "browserTarget": "jparson:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "json-ripper:build:production"
+              "browserTarget": "jparson:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "json-ripper:build"
+            "browserTarget": "jparson:build"
           }
         },
         "test": {
@@ -114,15 +114,15 @@
           "builder": "@angular-devkit/build-angular:protractor",
           "options": {
             "protractorConfig": "e2e/protractor.conf.js",
-            "devServerTarget": "json-ripper:serve"
+            "devServerTarget": "jparson:serve"
           },
           "configurations": {
             "production": {
-              "devServerTarget": "json-ripper:serve:production"
+              "devServerTarget": "jparson:serve:production"
             }
           }
         }
       }
     }},
-  "defaultProject": "json-ripper"
+  "defaultProject": "jparson"
 }

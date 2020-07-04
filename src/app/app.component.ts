@@ -7,7 +7,7 @@ import {StyleThemes} from "../ts/types/types";
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  title = 'json-ripper';
+  title = 'Jparson';
   private theme = StyleThemes.CLASSIC;
 
   toggleDarkMode() {
