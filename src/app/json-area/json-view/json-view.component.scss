@@ -2,16 +2,6 @@ $tabWidth: 30px;
 $spaceBetweenLineComponents: 6px;
 $lineHeight: 25px;
 
-.json-view {
-    background-image: repeating-linear-gradient(
-                    var(--color-json-odd-line-bg) 0px,
-                    var(--color-json-odd-line-bg) $lineHeight,
-                    transparent $lineHeight,
-                    transparent $lineHeight * 2
-    );
-    background-attachment: scroll;
-}
-
 .level {
     padding-left: $tabWidth;
     margin-left: 2px;
@@ -89,11 +79,23 @@ $lineHeight: 25px;
     }
 }
 
-.f-types {
-    .type {
-        display: inline;
+.filter {
+    &-types {
+        .type {
+            display: inline;
+        }
+        .value {
+            display: none;
+        }
     }
-    .value {
-        display: none;
+
+    &-zebra-striping {
+        background-image: repeating-linear-gradient(
+                        var(--color-json-odd-line-bg) 0px,
+                        var(--color-json-odd-line-bg) $lineHeight,
+                        transparent $lineHeight,
+                        transparent $lineHeight * 2
+        );
+        background-attachment: scroll;
     }
 }

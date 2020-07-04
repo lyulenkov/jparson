@@ -7,7 +7,31 @@
 }
 
 header {
+  display: flex;
+  box-sizing: border-box;
   height: 40px;
+  padding: 5px 0;
+
+  .night-mode-button {
+    box-sizing: border-box;
+    height: 30px;
+    width: 30px;
+    margin-left: auto;
+    border-radius: 2px;
+    background: var(--color-layout-block-bg);
+    text-align: center;
+    cursor: pointer;
+
+    i {
+      line-height: 30px;
+      font-size: 16px;
+      color: var(--color-ui-inactive-darker);
+    }
+
+    &.active {
+      color: var(--color-ui-active);
+    }
+  }
 }
 
 footer {
