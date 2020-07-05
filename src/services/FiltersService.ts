@@ -1,18 +1,19 @@
 import {Injectable} from "@angular/core";
 import {Subject} from "rxjs";
 
-export enum StaticFilterName {
-    TYPES = 'f-types'
-}
-
 export type StaticFilter = {
-    name: StaticFilterName,
+    name: string,
     value: boolean
 };
 
+export enum DynamicFilterName {
+    PROPERTY_NAME = 'property-name'
+}
+
 export type DynamicFilter = {
-    attributeName: string,
-    valuePattern: string
+    // TODO: replace name type with DynamicFilterName
+    name: string,
+    value: string
 };
 
 @Injectable({
@@ -27,5 +28,9 @@ export class FiltersService {
 
     setStaticFilter(filter: StaticFilter) {
         this.staticFilterSource.next(filter);
+    }
+
+    setDynamicFilter(filter: DynamicFilter) {
+        this.dynamicFilterSource.next(filter);
     }
 }

@@ -1,13 +1,11 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {JsonParser, ParsedJSONNode} from "../../ts/logic/JsonParser";
-
-
+import {DynamicFilter, FiltersService} from "../../services/FiltersService";
 
 enum AreaModes {
   EDIT = 'edit-mode',
   VIEW = 'view-mode'
 }
-
 
 @Component({
   selector: 'json-area',
@@ -17,9 +15,10 @@ enum AreaModes {
 export class JsonAreaComponent implements OnInit {
   private mode = AreaModes.EDIT;
   @Input() json = '';
-  parsedJson = new ParsedJSONNode({value: null, number: 0}); // TODO: replace with undefined and add ngIf to view component
+  private nameToFilter = new Map<string, DynamicFilter>();
+  parsedJson = new ParsedJSONNode({value: null, number: 0}); // TODO: replace with undefined and add ngIf to display component
 
-  constructor() {
+  constructor(private filtersService: FiltersService) {
     // TODO: remove testing data
     this.json = '{\n' +
         '  "Actors": [\n' +
@@ -57,11 +56,23 @@ export class JsonAreaComponent implements OnInit {
         '    }\n' +
         '  ]\n' +
         '}';
+
+    filtersService.dynamicFilters$.subscribe(this.applyDynamicFilter.bind(this));
+  }
+
+  applyDynamicFilter(filter: DynamicFilter) {
+    if (!filter.value) {
+      this.nameToFilter.delete(filter.name);
+    } else {
+      this.nameToFilter.set(filter.name, filter);
+    }
+    this.parseJson();
   }
 
   changeMode() {
     switch (this.mode) {
       case AreaModes.EDIT:
+        // TODO: check if source json has been changed
         this.parseJson();
         this.mode = AreaModes.VIEW;
         break;
@@ -72,6 +83,7 @@ export class JsonAreaComponent implements OnInit {
 
   parseJson(): boolean {
     try {
+      JsonParser.setFilters(Array.from(this.nameToFilter.values()));
       this.parsedJson = JsonParser.parse(this.json);
     } catch (e) {
       console.error(e);

@@ -1,11 +1,15 @@
 import {ObjectParser} from "./ObjectParser";
+import {DynamicFilter, DynamicFilterName} from "../../services/FiltersService";
 
-export class JsonParser {
+export const JsonParser = new class {
+    private filters: DynamicFilter[] = [];
 
-    /**
-     * @throws Error
-     */
-    static parse(json: string): ParsedJSONNode {
+    setFilters(filters: DynamicFilter[]) {
+        this.filters = filters;
+        return this;
+    }
+
+    parse(json: string): ParsedJSONNode {
         let value = JSON.parse(json);
         let lineCounter = {value: 0};
         if (value && typeof value === JsonTypes.OBJECT) {
@@ -17,7 +21,7 @@ export class JsonParser {
         return this.parsePrimitive(value, lineCounter);
     }
 
-    static parseObject(object: object, lineCounter: LineCounter, prop?: string): ParsedJSONNode {
+    parseObject(object: object, lineCounter: LineCounter, prop?: string): ParsedJSONNode {
         let node = new ParsedJSONNode({
             prop,
             type: JsonTypes.OBJECT,
@@ -25,6 +29,7 @@ export class JsonParser {
             valueHint: '{...}',
             number: ++lineCounter.value
         });
+        node.value.isFilteredOut = this.filterNode(node);
         ObjectParser.walk(object,(prop, value, parentProps) => {
             if (value instanceof Array) {
                 node.children.push(this.parseArray(value, lineCounter, prop));
@@ -36,10 +41,11 @@ export class JsonParser {
             postfix: BraceChar.CURLY_CLOSING,
             number: ++lineCounter.value
         }));
+        node.getClosingLineNode().value.isFilteredOut = this.filterNode(node.getClosingLineNode());
         return node;
     }
 
-    static parseArray(array: any[], lineCounter: LineCounter, prop?: string): ParsedJSONNode {
+    parseArray(array: any[], lineCounter: LineCounter, prop?: string): ParsedJSONNode {
         let node = new ParsedJSONNode({
             prop: this.normalizePropName(prop),
             type: JsonTypes.ARRAY,
@@ -47,6 +53,7 @@ export class JsonParser {
             valueHint: '[...]',
             number: ++lineCounter.value
         });
+        node.value.isFilteredOut = this.filterNode(node);
         array.forEach(value => {
             if (typeof value == JsonTypes.OBJECT) {
                 node.children.push(this.parseObject(value, lineCounter));
@@ -58,10 +65,11 @@ export class JsonParser {
             postfix: BraceChar.SQUARE_CLOSING,
             number: ++lineCounter.value
         }));
+        node.getClosingLineNode().value.isFilteredOut = this.filterNode(node.getClosingLineNode());
         return node;
     }
 
-    static parsePrimitive(value: any, lineCounter: LineCounter, prop?: string): ParsedJSONNode {
+    parsePrimitive(value: any, lineCounter: LineCounter, prop?: string): ParsedJSONNode {
         let type: string = typeof value;
         if (type == JsonTypes.STRING) {
             value = `"${value}"`;
@@ -72,21 +80,42 @@ export class JsonParser {
         } else {
             value = '' + value;
         }
-        return new ParsedJSONNode({
+        let node = new ParsedJSONNode({
             prop: this.normalizePropName(prop),
             value: value,
             type: type,
             number: ++lineCounter.value
         });
+        node.value.isFilteredOut = this.filterNode(node);
+        return node;
     }
 
-    static normalizePropName(prop: string): string {
+    normalizePropName(prop: string): string {
         if (prop && prop.includes(' ')) {
             return `"${prop}"`;
         }
         return prop;
     }
-}
+
+    /**
+     * @returns true if node has been filtered out by one of the filters
+     */
+    filterNode(node: ParsedJSONNode): boolean {
+        for (let filter of this.filters) {
+            switch (filter.name) {
+                case DynamicFilterName.PROPERTY_NAME:
+                    if (!node.value.prop) return true;
+                    let matches = node.value.prop.match(filter.value);
+                    if (!matches) {
+                        return true;
+                    }
+                    // TODO: else
+                break;
+            }
+        }
+        return false;
+    }
+};
 
 type ParsedJSONLine = {
     prop?: string,
@@ -96,8 +125,9 @@ type ParsedJSONLine = {
     isClosingLine?: boolean,
     valueHint?: string,
     number: number,
-    rejectedByFilters?: Set<string>
+    isFilteredOut?: boolean
 };
+
 
 export class ParsedJSONNode {
     children: ParsedJSONNode[] = [];
@@ -151,7 +181,7 @@ export class ParsedJSONNode {
     }
 
     isFilteredOut() {
-        return this.value.rejectedByFilters?.size;
+        return this.value.isFilteredOut;
     }
 
     toggleFolded() {

@@ -8,6 +8,7 @@ import { JsonViewComponent } from './json-area/json-view/json-view.component';
 import { ToolsPanelComponent } from './tools-panel/tools-panel.component';
 import { SwitchComponent } from './ui/switch/switch.component';
 import { StaticFilterComponent } from './tools-panel/static-filter/static-filter.component';
+import { DynamicFilterComponent } from './tools-panel/dynamic-filter/dynamic-filter.component';
 
 @NgModule({
   declarations: [
@@ -16,7 +17,8 @@ import { StaticFilterComponent } from './tools-panel/static-filter/static-filter
     JsonViewComponent,
     ToolsPanelComponent,
     SwitchComponent,
-    StaticFilterComponent
+    StaticFilterComponent,
+    DynamicFilterComponent
   ],
   imports: [
     BrowserModule,

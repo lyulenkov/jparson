@@ -77,6 +77,10 @@ $lineHeight: 25px;
             display: none;
         }
     }
+
+    &.filtered-out {
+        opacity: 0.4;
+    }
 }
 
 .filter {

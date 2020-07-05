@@ -1,0 +1,10 @@
+<div class="container">
+    <input #inputElement [(ngModel)]="searchValue"
+           (ngModelChange)="onValueChange()"
+           [ngClass]="{active: searchValue}"
+    >
+    <label (click)="inputElement.focus()">
+        {{label}}
+    </label>
+    <i class="fa fa-search"></i>
+</div>

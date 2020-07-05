@@ -1,5 +1,6 @@
 <ng-template #lineTemplate let-node="node">
-    <div class="line" [ngClass]="{folding: node.isFoldingLine(), folded: node.isFolded, hover: node.isHovered()}"
+    <div class="line"
+         [ngClass]="{folding: node.isFoldingLine(), folded: node.isFolded, hover: node.isHovered(), 'filtered-out': node.isFilteredOut()}"
          (click)="node.toggleFolded()"  
          (mouseover)="onLineMouseover(node)"
          (mouseout)="onLineMouseout(node)"

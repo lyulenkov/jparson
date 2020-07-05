@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import {StaticFilterName} from "../../services/FiltersService";
 
 @Component({
   selector: 'tools-panel',

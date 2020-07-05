@@ -1,5 +1,5 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {FiltersService, StaticFilterName} from "../../../services/FiltersService";
+import {DynamicFilter, FiltersService, StaticFilter} from "../../../services/FiltersService";
 import {ParsedJSONNode} from "../../../ts/logic/JsonParser";
 
 @Component({
@@ -13,16 +13,15 @@ export class JsonViewComponent implements OnInit {
   private readonly mainClassName = 'json-view';
 
   constructor(private filtersService: FiltersService) {
-    filtersService.staticFilter$.subscribe(filter => {
-      if (filter.value) {
-        this.filterClassNamesSet.add(filter.name);
-      } else {
-        this.filterClassNamesSet.delete(filter.name);
-      }
-    });
+    filtersService.staticFilter$.subscribe(this.onStaticFilterChange.bind(this));
   }
 
-  applySearchFilter(pattern: string) {
+  onStaticFilterChange(filter: StaticFilter) {
+    if (filter.value) {
+      this.filterClassNamesSet.add(filter.name);
+    } else {
+      this.filterClassNamesSet.delete(filter.name);
+    }
   }
 
   getClassList() {
