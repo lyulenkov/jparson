@@ -27,6 +27,11 @@ $lineHeight: 25px;
 
     .prop {
         color: var(--color-json-prop);
+
+        & > .highlighted {
+            margin: 0;
+            background-color: var(--color-json-area-highlighting);
+        }
     }
 
     .type {
@@ -80,6 +85,14 @@ $lineHeight: 25px;
 
     &.filtered-out {
         opacity: 0.4;
+
+        & + .level > .line {
+            opacity: 0.4;
+        }
+    }
+
+    &:not(.filtered-out) {
+        opacity: 1;
     }
 }
 

@@ -29,7 +29,7 @@ export const JsonParser = new class {
             valueHint: '{...}',
             number: ++lineCounter.value
         });
-        node.value.isFilteredOut = this.filterNode(node);
+        this.filterNode(node);
         ObjectParser.walk(object,(prop, value, parentProps) => {
             if (value instanceof Array) {
                 node.children.push(this.parseArray(value, lineCounter, prop));
@@ -41,7 +41,7 @@ export const JsonParser = new class {
             postfix: BraceChar.CURLY_CLOSING,
             number: ++lineCounter.value
         }));
-        node.getClosingLineNode().value.isFilteredOut = this.filterNode(node.getClosingLineNode());
+        this.filterNode(node.getClosingLineNode());
         return node;
     }
 
@@ -53,7 +53,7 @@ export const JsonParser = new class {
             valueHint: '[...]',
             number: ++lineCounter.value
         });
-        node.value.isFilteredOut = this.filterNode(node);
+        this.filterNode(node);
         array.forEach(value => {
             if (typeof value == JsonTypes.OBJECT) {
                 node.children.push(this.parseObject(value, lineCounter));
@@ -65,7 +65,7 @@ export const JsonParser = new class {
             postfix: BraceChar.SQUARE_CLOSING,
             number: ++lineCounter.value
         }));
-        node.getClosingLineNode().value.isFilteredOut = this.filterNode(node.getClosingLineNode());
+        this.filterNode(node.getClosingLineNode());
         return node;
     }
 
@@ -86,7 +86,7 @@ export const JsonParser = new class {
             type: type,
             number: ++lineCounter.value
         });
-        node.value.isFilteredOut = this.filterNode(node);
+        this.filterNode(node);
         return node;
     }
 
@@ -98,18 +98,23 @@ export const JsonParser = new class {
     }
 
     /**
-     * @returns true if node has been filtered out by one of the filters
+     * @returns modifies node depending on whether it passes a filter
      */
     filterNode(node: ParsedJSONNode): boolean {
         for (let filter of this.filters) {
             switch (filter.name) {
                 case DynamicFilterName.PROPERTY_NAME:
                     if (!node.value.prop) return true;
-                    let matches = node.value.prop.match(filter.value);
-                    if (!matches) {
-                        return true;
+                    let occurrenceIndex = node.value.prop.indexOf(filter.value);
+                    if (occurrenceIndex < 0) {
+                        node.value.isFilteredOut = true;
+                    } else {
+                        node.value.highlightedProp = {
+                            before: node.value.prop.substring(0, occurrenceIndex),
+                            match: node.value.prop.substr(occurrenceIndex, filter.value.length),
+                            after: node.value.prop.substr(occurrenceIndex + filter.value.length)
+                        };
                     }
-                    // TODO: else
                 break;
             }
         }
@@ -125,7 +130,8 @@ type ParsedJSONLine = {
     isClosingLine?: boolean,
     valueHint?: string,
     number: number,
-    isFilteredOut?: boolean
+    isFilteredOut?: boolean,
+    highlightedProp?: { before: string, match: string, after: string},
 };
 
 

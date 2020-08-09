@@ -1,5 +1,6 @@
 <div class="container">
     <input #inputElement [(ngModel)]="searchValue"
+           (keypress)="onKeyPress($event)"
            (ngModelChange)="onValueChange()"
            [ngClass]="{active: searchValue}"
     >

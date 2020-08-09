@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
 import {FiltersService} from "../../../services/FiltersService";
 
 @Component({
@@ -9,13 +9,22 @@ import {FiltersService} from "../../../services/FiltersService";
 export class DynamicFilterComponent implements OnInit {
   @Input() readonly label: string;
   @Input() readonly name: string;
-  @Input() searchValue: string;
+  @Input() readonly mask: string;
+  searchValue: string;
+  private maskRegexp: RegExp;
   private filterApplicationTimeout: number;
   private readonly filterApplicationDelay = 300; // ms
 
-  constructor(private filtersService: FiltersService) { }
+  constructor(private filtersService: FiltersService) {}
 
   ngOnInit(): void {
+    this.maskRegexp = this.mask && new RegExp(this.mask);
+  }
+
+  onKeyPress(event) {
+    if (this.maskRegexp && !this.maskRegexp.test(this.searchValue + event.key)) {
+      event.preventDefault();
+    }
   }
 
   onValueChange() {
@@ -24,5 +33,4 @@ export class DynamicFilterComponent implements OnInit {
       this.filtersService.setDynamicFilter({name: this.name, value: this.searchValue});
     }, this.filterApplicationDelay);
   }
-
 }
