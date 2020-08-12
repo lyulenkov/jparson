@@ -1,4 +1,14 @@
-import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  EventEmitter,
+  Input,
+  OnChanges,
+  OnInit,
+  Output,
+  SimpleChanges,
+  ViewChild
+} from '@angular/core';
 import {FiltersService} from "../../../services/FiltersService";
 
 @Component({
@@ -7,6 +17,7 @@ import {FiltersService} from "../../../services/FiltersService";
   styleUrls: ['./dynamic-filter.component.scss']
 })
 export class DynamicFilterComponent implements OnInit {
+  @ViewChild('inputElement') inputElement: ElementRef;
   @Input() readonly label: string;
   @Input() readonly name: string;
   @Input() readonly mask: string;
@@ -32,5 +43,11 @@ export class DynamicFilterComponent implements OnInit {
     this.filterApplicationTimeout = setTimeout(() => {
       this.filtersService.setDynamicFilter({name: this.name, value: this.searchValue});
     }, this.filterApplicationDelay);
+  }
+
+  clear() {
+    this.inputElement.nativeElement.focus();
+    this.searchValue = '';
+    this.onValueChange();
   }
 }

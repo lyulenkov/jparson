@@ -5,9 +5,11 @@
          (mouseover)="onLineMouseover(node)"
          (mouseout)="onLineMouseout(node)"
         >
-        <span *ngIf="node.value.prop && !node.value.highlightedProp" class="prop">{{node.value.prop}}</span>
+        <span *ngIf="node.value.prop && !node.value.highlightedProp" class="prop">
+            {{node.propIncludesSpaces ? '"' : ''}}{{node.value.prop}}{{node.propIncludesSpaces ? '"' : ''}}
+        </span>
         <span *ngIf="node.value.highlightedProp" class="prop">
-            {{node.value.highlightedProp.before}}<span class="highlighted">{{node.value.highlightedProp.match}}</span>{{node.value.highlightedProp.after}}
+            {{node.propIncludesSpaces ? '"' : ''}}{{node.value.highlightedProp.before}}<span class="highlighted">{{node.value.highlightedProp.match}}</span>{{node.value.highlightedProp.after}}{{node.propIncludesSpaces ? '"' : ''}}
         </span>
         <span *ngIf="node.value.prop">:</span>
         <span class="type" [class]="node.value.type" *ngIf="!node.isFoldingLine()">{{node.value.type}}</span>

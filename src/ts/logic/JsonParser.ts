@@ -47,7 +47,7 @@ export const JsonParser = new class {
 
     parseArray(array: any[], lineCounter: LineCounter, prop?: string): ParsedJSONNode {
         let node = new ParsedJSONNode({
-            prop: this.normalizePropName(prop),
+            prop,
             type: JsonTypes.ARRAY,
             postfix: BraceChar.SQUARE_OPENING,
             valueHint: '[...]',
@@ -81,20 +81,13 @@ export const JsonParser = new class {
             value = '' + value;
         }
         let node = new ParsedJSONNode({
-            prop: this.normalizePropName(prop),
+            prop,
             value: value,
             type: type,
             number: ++lineCounter.value
         });
         this.filterNode(node);
         return node;
-    }
-
-    normalizePropName(prop: string): string {
-        if (prop && prop.includes(' ')) {
-            return `"${prop}"`;
-        }
-        return prop;
     }
 
     /**
@@ -141,15 +134,17 @@ export class ParsedJSONNode {
     private _isHovered = false;
     private closingLine: ParsedJSONNode;
     private correspondingOpeningLineNode: ParsedJSONNode;
+    readonly propIncludesSpaces: boolean;
 
-    constructor(readonly value: ParsedJSONLine) {}
+    constructor(readonly value: ParsedJSONLine) {
+        this.propIncludesSpaces = value.prop && value.prop.includes(' ');
+    }
 
     hasChildren() {
         return this.children.length;
     }
 
     setClosingLineNode(line: ParsedJSONNode) {
-        // line.parentNode = this;
         line.setCorrespondingOpeningLineNode(this);
         this.closingLine = line;
     }

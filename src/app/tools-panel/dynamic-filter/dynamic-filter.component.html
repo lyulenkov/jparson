@@ -7,5 +7,6 @@
     <label (click)="inputElement.focus()">
         {{label}}
     </label>
-    <i class="fa fa-search"></i>
+    <i class="fa fa-search" *ngIf="!searchValue"></i>
+    <i class="clear-button fa fa-close" (click)="clear()" *ngIf="searchValue"></i>
 </div>
