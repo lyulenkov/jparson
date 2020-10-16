@@ -1,5 +1,6 @@
 import {Component} from '@angular/core';
 import {StyleThemes} from "../ts/types/types";
+import {appState} from "../ts/utils/AppState";
 
 @Component({
   selector: 'root',
@@ -8,13 +9,14 @@ import {StyleThemes} from "../ts/types/types";
 })
 export class AppComponent {
   title = 'Jparson';
-  private theme = StyleThemes.CLASSIC;
+  private theme = appState.darkTheme ? StyleThemes.DARK: StyleThemes.CLASSIC;
 
-  toggleDarkMode() {
+  toggleTheme() {
     this.theme = this.theme === StyleThemes.CLASSIC ? StyleThemes.DARK : StyleThemes.CLASSIC;
+    appState.darkTheme = this.isDarkTheme();
   }
 
-  isDarkMode() {
+  isDarkTheme() {
     return this.theme == StyleThemes.DARK;
   }
 

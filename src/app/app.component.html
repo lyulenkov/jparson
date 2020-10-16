@@ -1,6 +1,6 @@
 <div [ngClass]="['body-wrap', getTheme()]">
   <header>
-    <div [ngClass]="{'night-mode-button': true, active: isDarkMode()}" (click)="toggleDarkMode()">
+    <div [ngClass]="{'night-mode-button': true, active: isDarkTheme()}" (click)="toggleTheme()">
       <i class="fa fa-moon-o"></i>
     </div>
   </header>

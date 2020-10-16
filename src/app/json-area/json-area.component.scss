@@ -43,7 +43,6 @@ $top-panel-height: 30px;
         @include custom-webkit-scrollbar;
 
         box-sizing: border-box;
-        display: none;
         width: 100%;
         height: calc(100% - #{$top-panel-height});
         border: none;
@@ -66,18 +65,6 @@ $top-panel-height: 30px;
 
     .json-output {
         user-select: none;
-    }
-
-    &.edit-mode {
-        .json-input {
-            display: block;
-        }
-    }
-
-    &.view-mode {
-        .json-output {
-            display: block;
-        }
     }
 
     &.error {

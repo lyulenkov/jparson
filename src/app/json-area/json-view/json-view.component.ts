@@ -1,5 +1,5 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {DynamicFilter, FiltersService, StaticFilter} from "../../../services/FiltersService";
+import {FiltersService, StaticFilter} from "../../../services/FiltersService";
 import {ParsedJSONNode} from "../../../ts/logic/JsonParser";
 
 @Component({

@@ -61,11 +61,7 @@ export class JsonAreaComponent implements OnInit {
   }
 
   applyDynamicFilter(filter: DynamicFilter) {
-    if (!filter.value) {
-      this.nameToFilter.delete(filter.name);
-    } else {
-      this.nameToFilter.set(filter.name, filter);
-    }
+    filter.value ? this.nameToFilter.set(filter.name, filter) : this.nameToFilter.delete(filter.name);
     this.parseJson();
   }
 
@@ -98,6 +94,10 @@ export class JsonAreaComponent implements OnInit {
 
   isViewMode() {
     return this.mode == AreaModes.VIEW;
+  }
+
+  isEditingMode() {
+    return this.mode == AreaModes.EDIT;
   }
 
   ngOnInit(): void {
